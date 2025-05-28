@@ -34,7 +34,7 @@ class GithubOrgClient:
         """Return the payload (list of repos) from the repos API endpoint (memoized)."""
         return get_json(self._public_repos_url)
 
-    def public_repos(self, license_key: Optional[str] = None) -> List[str]:
+    def public_repos(self, license: Optional[str] = None) -> List[str]:
         """
         Return a list of public repository names.
 
@@ -44,11 +44,11 @@ class GithubOrgClient:
         return [
             repo["name"]
             for repo in repos
-            if license_key is None or self.has_license(repo, license_key)
+            if license is None or self.has_license(repo, license)
         ]
 
     @staticmethod
-    def has_license(repo: Dict[str, Dict], license_key: str) -> bool:
+    def has_license(repo: Dict[str, Dict], license: str) -> bool:
         """
         Check if the repository has the specified license key.
 
@@ -59,8 +59,8 @@ class GithubOrgClient:
         Returns:
             True if the repo has the license key, False otherwise.
         """
-        assert license_key is not None, "license_key cannot be None"
+        assert license is not None, "license cannot be None"
         try:
-            return access_nested_map(repo, ("license", "key")) == license_key
+            return access_nested_map(repo, ("license", "key")) == license
         except KeyError:
             return False
