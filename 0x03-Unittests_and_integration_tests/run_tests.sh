@@ -13,7 +13,7 @@ print('org_payload present?', 'org_payload' in dir(fixtures))
 "
 
 echo "Running unittest with PYTHONPATH=."
-PYTHONPATH=. python3 -m unittest test_client.py -v
+PYTHONPATH=. python3 -m unittest -q test_client.py -v
 
 TEST_EXIT_CODE=$?
 
