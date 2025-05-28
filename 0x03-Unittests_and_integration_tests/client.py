@@ -30,7 +30,8 @@ class GithubOrgClient:
             if not license or self.has_license(repo, license)
         ]
         return names
-
     def has_license(self, repo, license_key):
-        """Check if a repo has a specific license."""
-        return repo.get("license", {}).get("key") == license_key
+        license = repo.get("license")
+        if not license:
+            return False
+        return license.get("key") == license_key
