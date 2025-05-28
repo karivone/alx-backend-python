@@ -1,37 +1,66 @@
 #!/usr/bin/env python3
-"""Client module to interact with GitHub organization data."""
+"""A GitHub organization client."""
 
-from utils import get_json
+from typing import List, Dict, Optional
+
+from utils import (
+    get_json,
+    access_nested_map,
+    memoize,
+)
 
 
 class GithubOrgClient:
-    """GitHub Organization Client."""
+    """A GitHub organization client."""
 
-    def __init__(self, org_name):
-        self.org_name = org_name
+    ORG_URL = "https://api.github.com/orgs/{org}"
+
+    def __init__(self, org_name: str) -> None:
+        """Initialize the GithubOrgClient."""
+        self._org_name = org_name
+
+    @memoize
+    def org(self) -> Dict:
+        """Return the organization information (memoized)."""
+        return get_json(self.ORG_URL.format(org=self._org_name))
 
     @property
-    def org(self):
-        """Return organization info from GitHub API."""
-        url = f"https://api.github.com/orgs/{self.org_name}"
-        return get_json(url)
+    def _public_repos_url(self) -> str:
+        """Return the URL for the organization's public repositories."""
+        return self.org.get("repos_url", "")
 
-    @property
-    def _public_repos_url(self):
-        """Get public repositories URL from the org payload."""
-        return self.org["repos_url"]
+    @memoize
+    def repos_payload(self) -> List[Dict]:
+        """Return the payload (list of repos) from the repos API endpoint (memoized)."""
+        return get_json(self._public_repos_url)
 
-    def public_repos(self, license=None):
-        """Return a list of public repo names, filtered by license if provided."""
-        repos = get_json(self._public_repos_url)
-        names = [
+    def public_repos(self, license_key: Optional[str] = None) -> List[str]:
+        """
+        Return a list of public repository names.
+
+        Optionally filter repositories by license key.
+        """
+        repos = self.repos_payload
+        return [
             repo["name"]
             for repo in repos
-            if not license or self.has_license(repo, license)
+            if license_key is None or self.has_license(repo, license_key)
         ]
-        return names
-    def has_license(self, repo, license_key):
-        license = repo.get("license")
-        if not license:
+
+    @staticmethod
+    def has_license(repo: Dict[str, Dict], license_key: str) -> bool:
+        """
+        Check if the repository has the specified license key.
+
+        Args:
+            repo: The repository dictionary.
+            license_key: The license key to check for.
+
+        Returns:
+            True if the repo has the license key, False otherwise.
+        """
+        assert license_key is not None, "license_key cannot be None"
+        try:
+            return access_nested_map(repo, ("license", "key")) == license_key
+        except KeyError:
             return False
-        return license.get("key") == license_key
