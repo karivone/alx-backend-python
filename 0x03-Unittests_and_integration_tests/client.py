@@ -48,7 +48,7 @@ class GithubOrgClient:
         ]
 
     @staticmethod
-    def has_license(repo: Dict[str, Dict], license: str) -> bool:
+    def has_license(repo: Dict[str, Dict], license_key: str) -> bool:
         """
         Check if the repository has the specified license key.
 
@@ -59,8 +59,8 @@ class GithubOrgClient:
         Returns:
             True if the repo has the license key, False otherwise.
         """
-        assert license is not None, "license cannot be None"
+        assert license_key is not None, "license cannot be None"
         try:
-            return access_nested_map(repo, ("license", "key")) == license
+            return access_nested_map(repo, ("license", "key")) == license_key
         except KeyError:
             return False

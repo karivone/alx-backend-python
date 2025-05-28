@@ -26,7 +26,6 @@ class TestGithubOrgClient(unittest.TestCase):
         result = client.org
 
         # Assert
-        i
         self.assertEqual(result, expected_result)
         mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
 
@@ -128,7 +127,7 @@ class TestGithubOrgClient(unittest.TestCase):
         else False.
         """
         client = GithubOrgClient("test_org")
-        self.assertEqual(client.has_license(repo, license), expected)
+        self.assertEqual(client.has_license(repo, license_key), expected)
 
 #!/usr/bin/env python3
 """
@@ -153,7 +152,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
         for repo, license_key, expected in test_cases:
             with self.subTest(repo=repo, license_key=license_key):
-                self.assertEqual(client.has_license(repo, license), expected)
+                self.assertEqual(client.has_license(repo, license_key), expected)
 
 #!/usr/bin/env python3
 import unittest
