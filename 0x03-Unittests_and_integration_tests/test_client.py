@@ -6,6 +6,7 @@ from unittest.mock import patch, PropertyMock, Mock
 from parameterized import parameterized, parameterized_class
 from typing import List, Dict
 import fixtures
+from fixtures import org_payload
 from client import GithubOrgClient
 
 
