@@ -536,4 +536,19 @@ Repo:
     Directory: 0x03-Unittests_and_integration_tests
     File: test_client.py
 
+9. Integration tests
+#advanced
+
+Implement the test_public_repos method to test GithubOrgClient.public_repos.
+
+Make sure that the method returns the expected results based on the fixtures.
+
+Implement test_public_repos_with_license to test the public_repos with the argument license="apache-2.0" and make sure the result matches the expected value from the fixtures.
+
+Repo:
+
+    GitHub repository: alx-backend-python
+    Directory: 0x03-Unittests_and_integration_tests
+    File: test_client.py
+
 
