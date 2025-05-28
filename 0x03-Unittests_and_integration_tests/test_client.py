@@ -4,7 +4,7 @@ from unittest.mock import patch, PropertyMock, MagicMock
 from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
-
+from utils import ...
 
 class TestGithubOrgClient(unittest.TestCase):
     @parameterized.expand([
