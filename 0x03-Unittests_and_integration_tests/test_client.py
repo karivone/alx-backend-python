@@ -4,7 +4,8 @@ from unittest.mock import patch, PropertyMock, MagicMock
 from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
-from utils import ...
+from utils import test_client
+
 
 class TestGithubOrgClient(unittest.TestCase):
     @parameterized.expand([
@@ -46,7 +47,7 @@ class TestGithubOrgClient(unittest.TestCase):
                 GithubOrgClient, "_public_repos_url", new_callable=PropertyMock
         ) as mock_url:
             mock_url.return_value = (
-                    "https://api.github.com/orgs/test_org/repos" 
+                    "https://api.github.com/orgs/test_org/repos"
             )
 
             client = GithubOrgClient("test_org")
