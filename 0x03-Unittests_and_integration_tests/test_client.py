@@ -17,14 +17,14 @@ from github_client import GithubOrgClient
         "expected_repos": expected_repos,
         "apache2_repos": apache2_repos,
     }
-])
+], class_name_func=lambda cls, num, params: f"TestIntegrationGithubOrgClient_{num}")
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests for GithubOrgClient using real logic except external calls."""
 
     @classmethod
     def setUpClass(cls) -> None:
         """Setup patcher for requests.get and configure side_effect for json() to return fixtures."""
-        cls.get_patcher = patch('github_client.requests.get')
+        cls.get_patcher = patch('requests.get')
         cls.mock_get = cls.get_patcher.start()
 
         # Helper side_effect function for requests.get().json()
