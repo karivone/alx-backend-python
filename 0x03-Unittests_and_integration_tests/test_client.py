@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, PropertyMock
 from parameterized import parameterized
-from client import GithubOrgClient  
+from client import GithubOrgClient
+from typing import Dict
 from fixtures import org_payload
 # Ensure this matches your actual file structure
 
@@ -14,7 +15,7 @@ class TestGithubOrgClient(unittest.TestCase):
         ("google",),
         ("abc",)
     ])
-    @patch("client.get_json")  
+    @patch("client.get_json")
     # Patch the get_json used in the GithubOrgClient module
     def test_org(self, org_name, mock_get_json):
         """Test that GithubOrgClient.org returns the correct data"""
@@ -30,14 +31,9 @@ class TestGithubOrgClient(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    
+  
 #!/usr/bin/env python3
 """Unit tests for the GithubOrgClient class."""
-
-import unittest
-from unittest.mock import patch, PropertyMock
-from typing import Dict
-from client import GithubOrgClient
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -138,6 +134,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
 #!/usr/bin/env python3
 """Integration tests for GithubOrgClient.public_repos method."""
+
 
 import unittest
 from unittest.mock import patch, Mock
