@@ -4,6 +4,8 @@ from rest_framework.exceptions import ValidationError
 
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):
+    phone_number = serializers.CharField()
+
     class Meta:
         model = CustomUser
         fields = ['user_id', 'username', 'email', 'first_name', 'last_name', 'phone_number']
