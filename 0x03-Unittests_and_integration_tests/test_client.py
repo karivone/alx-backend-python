@@ -23,7 +23,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Patch requests.get to return mock responses using fixture data."""
-        cls.get_patcher = patch('requests.get')  # 👈 patching requests.get in client
+        cls.get_patcher = patch('requests.get')
         mock_get = cls.get_patcher.start()
 
         def side_effect(url, *args, **kwargs):
