@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-"""Integration test module for GithubOrgClient.public_repos."""
-
 import unittest
 from unittest.mock import patch, MagicMock
 from parameterized import parameterized_class
@@ -19,7 +17,6 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """Start patching requests.get and setup side effects."""
         cls.get_patcher = patch('requests.get')
         cls.mock_get = cls.get_patcher.start()
 
@@ -37,11 +34,9 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        """Stop patching requests.get."""
         cls.get_patcher.stop()
 
     def test_public_repos(self):
-        """Test public_repos returns expected repos list."""
         client = GithubOrgClient(self.org_payload["login"])
         self.assertEqual(client.public_repos(), self.expected_repos)
         
