@@ -13,7 +13,6 @@ from github_client import GithubOrgClient
     "apache2_repos": apache2_repos
 }])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
         cls.get_patcher = patch('requests.get')
