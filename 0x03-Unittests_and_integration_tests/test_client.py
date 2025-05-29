@@ -64,7 +64,6 @@ if __name__ == "__main__":
     unittest.main()
 
 
-
 """Unit tests for the GithubOrgClient class."""
 
 
