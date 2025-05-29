@@ -18,7 +18,6 @@ from github_client import GithubOrgClient
     }
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
-    """Integration test class for GithubOrgClient.public_repos method."""
 
     @classmethod
     def setUpClass(cls):
