@@ -8,12 +8,16 @@ from django.shortcuts import render
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['participants__username']
 
     # POST /conversations/ to create a new conversation (already handled by ModelViewSet create)
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['message_body']
 
     def create(self, request, *args, **kwargs):
         # Override create to ensure message is linked to a conversation
