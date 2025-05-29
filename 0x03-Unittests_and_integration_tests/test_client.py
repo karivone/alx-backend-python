@@ -2,7 +2,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from parameterized import parameterized_class
-
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 from github_client import GithubOrgClient
 
