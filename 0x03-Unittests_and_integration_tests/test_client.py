@@ -4,20 +4,16 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from parameterized import parameterized_class
-
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
-
 from github_client import GithubOrgClient
 
 
-@parameterized_class([
-    {
-        "org_payload": org_payload,
-        "repos_payload": repos_payload,
-        "expected_repos": expected_repos,
-        "apache2_repos": apache2_repos,
-    }
-], class_name_func=lambda cls, num, params: f"TestIntegrationGithubOrgClient_{num}")
+@parameterized_class([{
+    "org_payload": org_payload,
+    "repos_payload": repos_payload,
+    "expected_repos": expected_repos,
+    "apache2_repos": apache2_repos,
+}])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests for GithubOrgClient using real logic except external calls."""
 
