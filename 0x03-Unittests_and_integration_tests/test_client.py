@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 import unittest
-from unittest.mock import patch, PropertyMock
+from unittest.mock import patch, PropertyMock, Mock
+from parameterized import parameterized, parameterized_class
+from client import GithubOrgClient
+from typing import List, Dict
+from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
+import unittest
 from parameterized import parameterized
 from client import GithubOrgClient
-from typing import Dict
-from fixtures import org_payload
-# Ensure this matches your actual file structure
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -31,8 +33,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-  
-#!/usr/bin/env python3
+
 """Unit tests for the GithubOrgClient class."""
 
 
@@ -63,13 +64,8 @@ if __name__ == "__main__":
     unittest.main()
 
 
-#!/usr/bin/env python3
-"""Unit tests for the GithubOrgClient class."""
 
-import unittest
-from unittest.mock import patch, PropertyMock
-from typing import List, Dict
-from client import GithubOrgClient
+"""Unit tests for the GithubOrgClient class."""
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -110,12 +106,8 @@ class TestGithubOrgClient(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 
-#!/usr/bin/env python3
-"""Unit tests for GithubOrgClient.has_license method."""
 
-import unittest
-from parameterized import parameterized
-from client import GithubOrgClient
+"""Unit tests for GithubOrgClient.has_license method."""
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -126,22 +118,11 @@ class TestGithubOrgClient(unittest.TestCase):
         ({"license": {"key": "other_license"}}, "my_license", False),
     ])
     def test_has_license(self, repo: dict, license_key: str, expected: bool) -> None:
-        """Test that has_license returns True if repo has the given license key,
-        else False.
-        """
         client = GithubOrgClient("test_org")
         self.assertEqual(client.has_license(repo, license_key), expected)
 
-#!/usr/bin/env python3
+
 """Integration tests for GithubOrgClient.public_repos method."""
-
-
-import unittest
-from unittest.mock import patch, Mock
-from parameterized import parameterized, parameterized_class
-
-from client import GithubOrgClient
-from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 
 
 @parameterized_class([
