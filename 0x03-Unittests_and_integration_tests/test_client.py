@@ -15,7 +15,8 @@ from github_client import GithubOrgClient
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.get_patcher = patch('requests.get')
+        # Patch where requests.get is used inside github_client module
+        cls.get_patcher = patch('github_client.requests.get')
         cls.mock_get = cls.get_patcher.start()
 
         def side_effect(url, *args, **kwargs):
