@@ -9,14 +9,12 @@ from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 from github_client import GithubOrgClient
 
 
-@parameterized_class([
-    {
-        "org_payload": org_payload,
-        "repos_payload": repos_payload,
-        "expected_repos": expected_repos,
-        "apache2_repos": apache2_repos
-    }
-])
+@parameterized_class([{
+    "org_payload": org_payload,
+    "repos_payload": repos_payload,
+    "expected_repos": expected_repos,
+    "apache2_repos": apache2_repos
+}])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
