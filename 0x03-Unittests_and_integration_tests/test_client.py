@@ -25,7 +25,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         # Helper side_effect function for requests.get().json()
         def json_side_effect(url, *args, **kwargs):
             mock_resp = Mock()
-            if url == "https://api.github.com/orgs/google":
+            if url == f"https://api.github.com/orgs/{cls.org_payload['login']}":
                 mock_resp.json.return_value = cls.org_payload
             elif url == cls.org_payload["repos_url"]:
                 mock_resp.json.return_value = cls.repos_payload
@@ -40,11 +40,11 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         cls.get_patcher.stop()
 
     def test_public_repos(self) -> None:
-        client = GithubOrgClient("google")
+        client = GithubOrgClient(self.org_payload["login"])
         repos = client.public_repos()
         self.assertEqual(repos, self.expected_repos)
 
     def test_public_repos_with_license(self) -> None:
-        client = GithubOrgClient("google")
+        client = GithubOrgClient(self.org_payload["login"])
         repos = client.public_repos(license="apache-2.0")
         self.assertEqual(repos, self.apache2_repos)
