@@ -59,7 +59,7 @@ class GithubOrgClient:
         Returns:
             True if the repo has the license key, False otherwise.
         """
-        assert license_key is not None, "license cannot be None"
+        assert license_key is not None, "license_key cannot be None"
         try:
             return access_nested_map(repo, ("license", "key")) == license_key
         except KeyError:
