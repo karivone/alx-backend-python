@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Conversation, Message
@@ -28,3 +28,14 @@ class MessageViewSet(viewsets.ModelViewSet):
         return super().create(request, *args, **kwargs)
 
 # Create your views here.
+class IsOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.sender == request.user
+
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = [IsOwner]
+
+    def get_queryset(self):
+        return Message.objects.filter(sender=self.request.user)
