@@ -3,7 +3,7 @@ from datetime import datetime
 
 # Configure logger
 logger = logging.getLogger(__name__)
-handler = logging.FileHandler('user_requests.log')
+handler = logging.FileHandler('requests.log')
 formatter = logging.Formatter('%(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
