@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
 from django.http import HttpResponseForbidden
+from collections import defaultdict
 
 # Configure logger
 logger = logging.getLogger(__name__)
@@ -37,3 +38,37 @@ class RestrictAccessByTimeMiddleware:
         # Proceed to the view
         response = self.get_response(request)
         return response
+class OffensiveLanguageMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+        # Track IP -> [timestamps]
+        self.message_history = defaultdict(list)
+        self.TIME_WINDOW = 60  # seconds
+        self.MAX_MESSAGES = 5
+
+    def __call__(self, request):
+        if request.method == 'POST' and '/messages/' in request.path:
+            ip_address = self.get_client_ip(request)
+            current_time = time.time()
+
+            # Remove messages older than TIME_WINDOW
+            self.message_history[ip_address] = [
+                ts for ts in self.message_history[ip_address]
+                if current_time - ts < self.TIME_WINDOW
+            ]
+
+            if len(self.message_history[ip_address]) >= self.MAX_MESSAGES:
+                return HttpResponseForbidden("Rate limit exceeded: Max 5 messages per minute.")
+
+            self.message_history[ip_address].append(current_time)
+
+        return self.get_response(request)
+
+    def get_client_ip(self, request):
+        """Get IP from request (handle proxies if any)."""
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
