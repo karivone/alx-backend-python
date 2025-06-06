@@ -6,6 +6,7 @@ from .serializers import ConversationSerializer, MessageSerializer
 from django.shortcuts import render
 from .permissions import IsParticipantOfConversation
 from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
@@ -35,5 +36,22 @@ class MessageViewSet(viewsets.ModelViewSet):
         return super().create(request, *args, **kwargs)
 
     def get_queryset(self):
-        return self.queryset.filter(conversation__participants=self.request.user)
-# Create your views here.
+        return Message.objects.filter(conversation__participants=self.request.user)
+
+    def retrieve(self, request, *args, **kwargs):
+        message = get_object_or_404(Message, pk=kwargs['pk'])
+        if request.user not in message.conversation.participants.all():
+            return Response({'detail': 'Forbidden'}, status=status.HTTP_403_FORBIDDEN)
+        return super().retrieve(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        message = get_object_or_404(Message, pk=kwargs['pk'])
+        if request.user not in message.conversation.participants.all():
+            return Response({'detail': 'Forbidden'}, status=status.HTTP_403_FORBIDDEN)
+        return super().update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        message = get_object_or_404(Message, pk=kwargs['pk'])
+        if request.user not in message.conversation.participants.all():
+            return Response({'detail': 'Forbidden'}, status=status.HTTP_403_FORBIDDEN)
+        return super().destroy(request, *args, **kwargs)

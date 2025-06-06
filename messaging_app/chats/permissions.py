@@ -12,12 +12,13 @@ class IsParticipant(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         # Check if the user is part of the conversation
-        if hasattr(obj, 'participants'):
-            return request.user in obj.participants.all()
-        if hasattr(obj, 'conversation'):
-            return request.user in obj.conversation.participants.all()
-        return False
+        if request.method in ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']:
+            if hasattr(obj, 'participants'):
+                return user in obj.participants.all()
+            if hasattr(obj, 'conversation'):
+                return user in obj.conversation.participants.all()
 
+        return False
 class IsSender(permissions.BasePermission):
     """
     Allows access only to the sender of the message.
