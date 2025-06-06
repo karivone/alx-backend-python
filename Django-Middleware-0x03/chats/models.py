@@ -8,7 +8,8 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
-
+    role = models.CharField(max_length=20, choices=[('admin', 'Admin'), ('moderator', 'Moderator'), ('user', 'User')])
+    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 

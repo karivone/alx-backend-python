@@ -72,3 +72,25 @@ class OffensiveLanguageMiddleware:
         else:
             ip = request.META.get('REMOTE_ADDR')
         return ip
+class RolePermissionMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Skip checks for admin login or static/media paths
+        if request.path.startswith('/admin/') or request.path.startswith('/static/'):
+            return self.get_response(request)
+
+        # Skip unauthenticated users
+        if not request.user.is_authenticated:
+            return self.get_response(request)
+
+        # Check user role (assuming `role` is a field on the User model or profile)
+        user = request.user
+        user_role = getattr(user, 'role', None)  # or use user.profile.role if stored in profile
+
+        allowed_roles = ['admin', 'moderator']
+        if user_role not in allowed_roles:
+            return HttpResponseForbidden("Access denied: You do not have the required role.")
+
+        return self.get_response(request)
