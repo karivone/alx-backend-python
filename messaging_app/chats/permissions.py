@@ -1,7 +1,8 @@
-from rest_framework import permissions
+from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.exceptions import PermissionDenied
 from .models import Conversation
 
-class IsParticipant(permissions.BasePermission):
+class IsParticipantOfConversation(BasePermission):
     """
     Custom permission to allow only participants of a conversation to interact with it.
     """
@@ -19,7 +20,7 @@ class IsParticipant(permissions.BasePermission):
                 return user in obj.conversation.participants.all()
 
         return False
-class IsSender(permissions.BasePermission):
+class IsSender(BasePermission):
     """
     Allows access only to the sender of the message.
     """
