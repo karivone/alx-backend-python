@@ -26,6 +26,9 @@ class MessageViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['message_body']
     permission_classes = [IsAuthenticated, IsParticipantOfConversation]
+    pagination_class = MessagePagination  # optional
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = MessageFilter
 
     def create(self, request, *args, **kwargs):
         # Override create to ensure message is linked to a conversation
