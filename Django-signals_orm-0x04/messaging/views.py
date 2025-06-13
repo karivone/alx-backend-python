@@ -42,6 +42,6 @@ def unread_messages_view(request):
     if not request.user.is_authenticated:
         return render(request, 'messaging/unauthorized.html')
 
-    unread_msgs = Message.unread.unread_for_user(request.user)
+    unread_msgs = Message.unread.unread_for_user(request.user).only('id', 'sender', 'content', 'timestamp')
     return render(request, 'messaging/unread_messages.html', {'unread_messages': unread_msgs})
 # Create your views here.
