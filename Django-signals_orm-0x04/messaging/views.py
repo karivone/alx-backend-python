@@ -37,4 +37,11 @@ def get_message_thread(message):
     collect_replies(message)
     return thread
 
+
+def unread_messages_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    unread_msgs = Message.unread.for_user(request.user)
+    return render(request, 'messaging/unread_messages.html', {'unread_messages': unread_msgs})
 # Create your views here.
