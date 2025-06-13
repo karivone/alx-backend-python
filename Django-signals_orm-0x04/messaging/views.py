@@ -4,6 +4,7 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.db.models import Prefetch
+from .models import Message
 
 @login_required
 def delete_user(request):
@@ -15,14 +16,15 @@ def delete_user(request):
     else:
         return redirect('profile')  # Replace with your profile page or error page
 
-def conversation_thread(user1, user2):
+@login_required
+def user_conversation_view(request):
     base_messages = Message.objects.filter(
-        sender=user1, receiver=user2, parent_message__isnull=True
+        sender=request.user, parent_message__isnull=True
     ).select_related('sender', 'receiver').prefetch_related(
         Prefetch('replies', queryset=Message.objects.select_related('sender', 'receiver'))
     )
+    return render(request, 'messaging/conversation.html', {'messages': base_messages})
 
-    return base_messages
 def get_message_thread(message):
     thread = []
 
