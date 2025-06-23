@@ -1,7 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: messaging-app
+  name: messaging-app-bue
+  labels:
+    app: messaging-app-blue
 spec:
   replicas: 2
   selector:
@@ -10,11 +12,11 @@ spec:
   template:
     metadata:
       labels:
-        app: messaging-app
+        app: messaging-app-blue
     spec:
       containers:
       - name: messaging-app
-        image: messaging-app:latest   # Or use your DockerHub image
+        image: messaging-app:2.0   # Or use your DockerHub image
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
