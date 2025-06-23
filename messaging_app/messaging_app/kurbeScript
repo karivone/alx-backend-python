@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Ensure user is not running this script entirely as root
+if [[ $EUID -eq 0 ]]; then
+  echo "❌ Do not run the entire script with sudo. Run it as a regular user."
+  exit 1
+fi
+
+# Step 1: Install dependencies (with sudo)
+echo "🔧 Installing required system packages..."
+sudo dnf install -y curl wget conntrack-tools
+
+# Step 2: Install kubectl if not present
+if ! command -v kubectl &>/dev/null; then
+  echo "⬇️ Installing kubectl..."
+  KUBECTL_VERSION=$(curl -s https://dl.k8s.io/release/stable.txt)
+  curl -LO https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl
+  chmod +x kubectl
+  sudo mv kubectl /usr/local/bin/
+else
+  echo "✅ kubectl already installed."
+fi
+
+# Step 3: Install Minikube if not present
+if ! command -v minikube &>/dev/null; then
+  echo "⬇️ Installing Minikube..."
+  curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
+  sudo rpm -Uvh minikube-latest.x86_64.rpm
+  rm -f minikube-latest.x86_64.rpm
+else
+  echo "✅ Minikube already installed."
+fi
+
+# Step 4: Start Docker if not running
+if ! systemctl is-active --quiet docker; then
+  echo "🚀 Starting Docker service..."
+  sudo systemctl start docker
+  sudo systemctl enable docker
+else
+  echo "✅ Docker is already running."
+fi
+
+# Step 5: Start Minikube (no sudo)
+echo "🚀 Starting Minikube cluster using Docker driver..."
+minikube start --driver=docker
+
+# Step 6: Verify Kubernetes cluster
+echo "🔍 Verifying Kubernetes cluster status..."
+kubectl cluster-info
+
+# Step 7: List all running pods
+echo "📦 Listing pods in all namespaces..."
+kubectl get pods -A
